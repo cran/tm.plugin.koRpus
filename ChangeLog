@@ -1,0 +1,153 @@
+ChangeLog for package tm.plugin.koRpus
+
+changes in version 0.4-1 (2020-12-17)
+fixed:
+  - docTermMatrix(): results were wrong because numbers were assigned to
+    wrong columns; now fixed in koRpus
+  - unit tests failed on windows due to an UTF-8 issue
+changed:
+  - the nested object class kRp.hierarchy was replaced by kRp.corpus; instead
+    of reproducing the file hierarchy in the object structure, kRp.corpus has
+    a flat structure with all texts in one single data frame; this data frame
+    was also renamed from "TT.res" into "tokens" the class name kRp.corpus
+    was used in tm.plugin.koRpus before and is just being recycled ;) kRp.corpus
+    inherits from class kRp.text as defined in the koRpus package
+  - status messages are currently only shown when only one CPU is used
+  - corpusTagged(): now called taggedText() as in koRpus
+  - corpusDesc(): now called describe() as in koRpus
+  - [, [<-, [[ and [[<- methods no longer apply to the summary data frame but
+    tokens slot as in koRpus (where it applies to the TT.res slot)
+  - show(): kRp.corpus objects now list all available features
+  - read.corp.custom(): removed unused mc.cores argument
+  - docTermMatrix(): by default behaves like most other methods and adds its
+    result to the input object rather than returning just the matrix; also,
+    the generic is now defined by the koRpus package and was removed, including
+    all of the actual function code
+  - adjusted unit tests and vignette
+  - updated all examples to use a new sample corpus (see added), to the
+    benefit that many "\dontrun{}" cases could be removed
+added:
+  - readCorpus(): the hierarchy levels of a text corpus can now be assumed
+    directly from the directory structure by setting "hierarchy=TRUE"
+  - corpusHasFeatures(), corpusHasFeatures()<-, corpusFeatures(),
+    corpusFeatures()<-, corpusHierarchy(), corpusHierarchy()<-, corpusCorpFreq(),
+    corpusCorpFreq()<-, diffText(), diffText()<-, originalText(): new getter/setter
+    methods for kRp.corpus objects
+  - split_by_doc_id(): new method transforms a kRp.corpus object into a list
+    of kRp.text objects
+  - corpusDocTermMatrix(): new method to get/set the sparse document term
+    matrix in kRp.corpus objects
+  - [[/[[<-: gained new argument "doc_id" to limit the scope to particular
+    documents
+  - describe()/describe()<-: now support filtering by doc_id
+  - new sample corpus for use in examples
+removed:
+  - removed all classes and methods dealing with kRp.hierarchy
+  - removed deprecated methods of the pre-kRp.hierarchy era
+  - removed generic of tif_as_tokens_df() as it was moved to the koRpus
+    package
+
+changes in version 0.3-1 (2019-05-14)
+fixed:
+  - readCorpus(): solved a cryptic warning when more than one text was
+    tokenized
+added:
+  - docTermMatrix(): new method to generate document-term matrices, either
+    with absolute frequencies or tf-idf values
+  - query(): new method, extending the generic of koRpus >= 0.12-1
+  - filterByClass(): new method, extending the generic of koRpus >= 0.12-1
+  - jumbleWords(): new method, extending the generic of koRpus >= 0.12-1
+  - clozeDelete(): new method, extending the generic of koRpus >= 0.12-1
+  - cTest(): new method, extending the generic of koRpus >= 0.12-1
+  - textTransform(): new method, extending the generic of koRpus >= 0.12-1
+  - show(): new method for objects of class kRp.hierarchy
+changed:
+  - depends on koRpus >= 0.12-1 now
+  - depends on the Matrix package now (for docTermMatrix())
+  - adjusted test standards to include the additional POS tags from koRpus >=
+    0.12-1
+
+changes in version 0.02-2 (2019-01-18)
+fixed:
+  - readCorpus(), kRpSource(): added missing imports from packages tm, NLP
+    and parallel
+  - readCorpus(): fixed status message formatting
+  - corpusTm(): removed useless "level" argument and corrected the output
+  - readCorpus(): removed unused "level" argument
+  - corpusFiles(): now also works with flat hierarchy objects
+added:
+  - readCorpus(): can now also import data frames in TIF format, including
+    support for hierarchal categories
+  - tif_as_corpus_df(): new S4 method to transform a kRp.hierarchy object
+    into a TIF compliant data frame
+changed:
+  - readCorpus(): the tm corpora now include full hierarchy metadata
+  - removed pre-hierarchy portions from internal function whatIsAvailable()
+
+changes in version 0.02-1 (2018-07-29)
+changed:
+  - vignette: also includes info on readCorpus()
+  - tests: adjusted test standards to new object class
+added:
+  - kRp.hierarchy: new S4 class to replace kRp.sourcesCorpus and
+    kRp.topicCorpus to allow more generic nesting of hierarchical levels
+  - readCorpus(): new function to generate kRp.hierarchy objects recursively
+  - many corpus*() getter functions can now filter by hierarchy level or
+    category ID
+  - removed all code regarding simpleCorpus(), sourcesCorpus() and
+    topicCorpus(), their object classes and methods; this is all handled much more
+    flexible by kRp.hierarchy and readCorpus() now
+
+changes in version 0.01-4 (2018-03-07)
+fixed:
+  - sourcesCorpus(): speak of "text" instead of "texts" if it's only one
+changed:
+  - adjusted package to support koRpus >= 0.11 and sylly, especially with
+    regards to summary(), hyphen(), and new class contructors
+  - summary(): for more coherence with the koRpus package the "text" column
+    in the summary slot was renamed into "doc_id"
+  - reaktanz.de supports HTTPS now, updated references
+  - vignette is now in RMarkdown/HTML format; the SWeave/PDF version was
+    dropped
+  - hyphen()/lex.div()/readability(): 'quiet' is now TRUE by default
+  - lex.div(): 'char' is now an emtpy string by default; computing all
+    characteristics was not a useful default for large text corpora
+added:
+  - README.md
+  - new [, [<-, [[ and [[<- methods added for corpus object classes
+  - new methods tif_as_tokens_df() to export corpus objects as a single
+    data.frame in fully TIF compliant format
+  - summary(): now also includes the total number of stopwords (if available)
+  - new class object contructors kRp_corpus(), kRp_sourcesCorpus(), and
+    kRp_topicCorpus() can be used instead of new("kRp.corpus", ...) etc.
+
+changes in version 0.01-3 (2016-07-12)
+fixed:
+  - the arguments that simpleCorpus() was supposed to pipe to DirSource()
+    weren't used
+changed:
+  - the "paths" argument of topicCorpus() now expects a list, not a vector
+  - using the parallel package to be able to use more CPU cores
+added:
+  - new argument "format" for simpleCorpus(), sourceCorpus(), and
+    topicCorpus(), to be able to work with text objects directly, instead of files
+
+changes in version 0.01-2 (2015-07-08)
+changed:
+  - using the S4 methods of koRpus 0.06-1 now, therefore renamed all methods
+    removing the *.corpus suffix (e.g., lex.div.corpus() is now lex.div())
+  - renamed classes into kRp.corpus, kRp.sourcesCorpus and kRp.topicCorpus,
+    and their generator functions accordingly
+added:
+  - new methods read.corp.custom(), freq.analysis() and summary()
+  - new getter/setter methods: corpusSources(), corpusTopics(), corpusFreq(),
+    corpusSummary()
+  - first basic unit tests, using the testthat package
+  - new option "summary" for lex.div() and readability(), to automatically
+    update the summary data.frames
+  - first notes in a vignette
+
+changes in version 0.01-1 (2015-06-29)
+added:
+  - initial release
+
